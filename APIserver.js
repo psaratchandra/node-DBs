@@ -9,11 +9,18 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 var elasticsearch = require('elasticsearch');
+// Connect to ES
 var ES_client = new elasticsearch.Client({
     host: 'localhost:9200'          // default path
 });
 
-var Redis_client = require('redis');
+var redis = require('redis');
+var Redis_client = redis.createClient(6379,'localhost'); //create a new Redis Redis_client
+
+// Connect to Redis Server
+Redis_client.on('connect', function() {
+    console.log('Connected to Redis server');
+});
 
 function addDoc_ES(document){
     //console.log(document);
