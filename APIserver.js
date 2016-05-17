@@ -8,20 +8,41 @@ var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-var ES_client = require('elasticsearch');
+var elasticsearch = require('elasticsearch');
+var ES_client = new elasticsearch.Client({
+    host: 'localhost:9200'          // default path
+});
 
 var Redis_client = require('redis');
 
+function addDoc_ES(document){
+    console.log(document);
+    return ES_client.index({
+        index: "cloudboost",
+        type: "messages",
+        body: document
+    });
+}
+
 app.route('/index')
     .post(function(req,res){
-       console.log("Indexed message into ElasticSearch and Redis");
+        addDoc_ES(req.body).then(function(result){res.send(result)});
+        console.log("Indexed message into ElasticSearch and Redis");
     })
     .get(function(req,res){
         console.log("Get data from Redis");
     });
 
 app.get('/search', function(req,res){
-   res.send("Search data from ElasticSearch");
+    //console.log("Search data from ElasticSearch"+ req.params);
+    ES_client.search({
+        q: 'test'
+    }).then(function (body) {
+        var hits = body.hits.hits;
+        res.send(hits);
+    }, function (error) {
+        console.trace(error.message);
+    });
 });
 
 app.listen(7000, function(){
