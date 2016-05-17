@@ -20,7 +20,8 @@
   "author": "Sarat Chandra Pasumarthy",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/SaratChandraP/cloudboost-task/issues"
+    "url": "https://github.com/SaratChandraP/cloudboost-task/issues",
+    "email": "p.saratchandra4357@gmail.com"
   },
   "homepage": "https://github.com/SaratChandraP/cloudboost-task#readme",
   "dependencies": {
