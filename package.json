@@ -1,0 +1,32 @@
+{
+  "name": "cloudboost-task",
+  "version": "1.0.0",
+  "description": "Application for CloudBoost.io for showcasing skills",
+  "main": "APIserver.js",
+  "scripts": {
+    "start": "node APIserver.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaratChandraP/cloudboost-task.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "Express",
+    "ElasticSearch",
+    "Redis"
+  ],
+  "author": "Sarat Chandra Pasumarthy",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/SaratChandraP/cloudboost-task/issues"
+  },
+  "homepage": "https://github.com/SaratChandraP/cloudboost-task#readme",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "elasticsearch": "^11.0.1",
+    "express": "^4.13.4",
+    "redis": "^2.5.3"
+  }
+}
