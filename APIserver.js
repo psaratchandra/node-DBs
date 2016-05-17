@@ -16,12 +16,20 @@ var ES_client = new elasticsearch.Client({
 var Redis_client = require('redis');
 
 function addDoc_ES(document){
-    console.log(document);
+    //console.log(document);
     return ES_client.index({
         index: "cloudboost",
         type: "messages",
         body: document
     });
+}
+
+function search_ES(to_match) {
+    return ES_client.search({
+        index: "cloudboost",
+        type: "messages",
+        q: to_match
+    })
 }
 
 app.route('/index')
@@ -34,11 +42,9 @@ app.route('/index')
     });
 
 app.get('/search', function(req,res){
-    //console.log("Search data from ElasticSearch"+ req.params);
-    ES_client.search({
-        q: 'test'
-    }).then(function (body) {
-        var hits = body.hits.hits;
+    console.log("Searching from ElasticSearch for "+ req.query.str);
+    search_ES(req.query.str).then(function (result) {
+        var hits = result.hits.hits;
         res.send(hits);
     }, function (error) {
         console.trace(error.message);
