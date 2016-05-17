@@ -3,34 +3,46 @@
  */
 
 var express = require('express');
-var app = express();
-
 var bodyParser = require('body-parser');
+var app = express();
 app.use(bodyParser.json());
 
 var elasticsearch = require('elasticsearch');
 // Connect to ES
 var ES_client = new elasticsearch.Client({
-    host: 'localhost:9200'          // default path
+    host: 'localhost:9200'          // default host and port
 });
 
 var redis = require('redis');
-var Redis_client = redis.createClient(6379,'localhost'); //create a new Redis Redis_client
+var Redis_client = redis.createClient(6379,'localhost'); //create a new Redis client with default port and host
 
 // Connect to Redis Server
 Redis_client.on('connect', function() {
     console.log('Connected to Redis server');
 });
 
-function addDoc_ES(document){
+var count = 0; // For user IDs in Redis DB
+
+// Function for adding data to ElasticSearch and Redis
+function addDoc(document){
     //console.log(document);
+    count++;
+
+    Redis_client.hmset("user"+count, "name", document.name, "message", document.message,
+        function (err) {if(err) console.log(err);}
+    );
+
     return ES_client.index({
         index: "cloudboost",
         type: "messages",
-        body: document
+        body: {
+            name: document.name,
+            message: document.message
+        }
     });
 }
 
+// Function for searching data from ElasticSearch
 function search_ES(to_match) {
     return ES_client.search({
         index: "cloudboost",
@@ -39,15 +51,26 @@ function search_ES(to_match) {
     })
 }
 
+// API route '/index' with POST and GET
 app.route('/index')
     .post(function(req,res){
-        addDoc_ES(req.body).then(function(result){res.send(result)});
-        console.log("Indexed message into ElasticSearch and Redis");
+        // Store data into DBs
+        addDoc(req.body).then(function(result){res.send(result)});
+        //console.log("Indexed message into ElasticSearch and Redis");
     })
     .get(function(req,res){
-        console.log("Get data from Redis");
+
+        // GET data from Redis based on user id
+
+        var key = "user"+req.query.id;
+        Redis_client.hgetall(key, function (error, result){
+            if (error) res.send('Error ' + error);
+            else res.send(result);
+        });
+        //console.log("Get data from Redis");
     });
 
+// API '/search' with GET for searching data from ES
 app.get('/search', function(req,res){
     console.log("Searching from ElasticSearch for "+ req.query.str);
     search_ES(req.query.str).then(function (result) {
@@ -58,6 +81,7 @@ app.get('/search', function(req,res){
     });
 });
 
+// Start Express server on specified port
 app.listen(7000, function(){
    console.log("API server started on port 7000 !");
 });
