@@ -14,7 +14,7 @@ This route is used to get the data from the Redis DB. For this the user has to s
 
 ## API 2 '/search'
 ### GET
-This API is used to search for data from the ElasticSearch DB. To do so, the user can send the query with the 'str' parameter which can be a key:value pair or simple of string. The user can also send a GET request without any parameters to retrieve all the data in the ElasticSearch DB.
+This API is used to search for data from the ElasticSearch DB. To do so, the user can send the query with the 'str' parameter which can be a key:value pair or a simple string. The user can also send a GET request without any parameters to retrieve all the data in the ElasticSearch DB.
 
 # Author
 Sarat Chandra Pasumarthy
