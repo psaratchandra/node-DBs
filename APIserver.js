@@ -55,19 +55,17 @@ function search_ES(to_match) {
 app.route('/index')
     .post(function(req,res){
         // Store data into DBs
+        console.log("Indexing message into ElasticSearch and Redis");
         addDoc(req.body).then(function(result){res.send(result)});
-        //console.log("Indexed message into ElasticSearch and Redis");
     })
     .get(function(req,res){
-
         // GET data from Redis based on user id
-
+        console.log("Getting data for user"+req.query.id);
         var key = "user"+req.query.id;
         Redis_client.hgetall(key, function (error, result){
             if (error) res.send('Error ' + error);
             else res.send(result);
         });
-        //console.log("Get data from Redis");
     });
 
 // API '/search' with GET for searching data from ES
