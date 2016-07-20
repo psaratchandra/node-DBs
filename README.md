@@ -1,6 +1,5 @@
-# cloudboost-task
-NodeJS task for CloudBoost.io
-Task to create two APIs and use them for data operations on ElasticSearch and Redis
+# Node.js and DBs
+NodeJS server with two APIs and use them for data operations on ElasticSearch and Redis
 
 ## API 1 '/index'
 ### POST
